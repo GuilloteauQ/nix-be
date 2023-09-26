@@ -1,8 +1,8 @@
-# nix-be
+# Nix Best-Effort (`nix-be`)
 
 Create a low cost environment from what is already in your /nix/store.
 
-Warning: of course there are no guarantee on which version of the package you ask.
+**Warning**: of course there are no guarantee on which version of the package you ask you will get.
 
 ## Run
 
