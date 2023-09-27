@@ -30,7 +30,7 @@ def main():
                     description='Create a low cost Nix environment from what is already in your /nix/store')
     parser.add_argument('package', help="Package to include in the environment", nargs='+')
     parser.add_argument('-c', '--command', help="command to execute in the shell")
-    parser.add_argument('-l', '--limit', help="number of results to fetch in the DB (default: 1)", default=1)
+    parser.add_argument('-l', '--limit', help="number of results to fetch in the DB (default: 1)", default=1, type=int)
     parser.add_argument('-v', '--verbose', help="backstage access", action='store_true')
 
     args = parser.parse_args()
