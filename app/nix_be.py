@@ -27,12 +27,14 @@ def main():
     parser = argparse.ArgumentParser(
                     prog='nix-be',
                     description='Create a low cost environment from what is already in your /nix/store')
-    parser.add_argument('package', help="Package to include in the environment", nargs='*')
+    parser.add_argument('package', help="Package to include in the environment", nargs='+')
+    parser.add_argument('-c', '--command', help="command to execute in the shell")
     parser.add_argument('-v', '--verbose', help="backstage access", action='store_true')
 
     args = parser.parse_args()
     packages = args.package
     verbose = args.verbose
+    user_command = args.command
 
     if verbose:
         logging.getLogger().setLevel(logging.DEBUG)
@@ -70,7 +72,11 @@ def main():
     logging.info(f"RC file location: {rc_file.name}")
     with open(rc_file.name, "wb") as rc:
         rc.write(rc_content.encode('utf8'))
-    subprocess.run(["bash", "--rcfile", rc_file.name])
+
+    command = ["bash", "--rcfile", rc_file.name]
+    if user_command:
+        command += ["-ci", user_command]
+    subprocess.run(command)
 
     return 0
 
