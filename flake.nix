@@ -1,30 +1,32 @@
 {
   description = "A very basic flake";
 
-  inputs = { nixpkgs.url = "github:nixos/nixpkgs/23.05"; };
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/23.05";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
-  outputs = { self, nixpkgs }:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-    in {
-      packages.${system} = rec {
-        default = nix-be;
-        nix-be = pkgs.python3Packages.buildPythonApplication {
-          name = "nix-be";
-          version = "0.0.1";
-          src = ./.;
-          propagatedBuildInputs = with (pkgs.python3Packages); [
-            sqlite-utils
-            packaging
-          ];
-          doCheck = false;
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let pkgs = import nixpkgs { inherit system; };
+      in {
+        packages = rec {
+          default = nix-be;
+          nix-be = pkgs.python3Packages.buildPythonApplication {
+            name = "nix-be";
+            version = "0.0.1";
+            src = ./.;
+            propagatedBuildInputs = with (pkgs.python3Packages); [
+              sqlite-utils
+              packaging
+            ];
+            doCheck = false;
+          };
         };
-      };
 
-      devShells.${system} = {
-        default = pkgs.mkShell { buildInputs = with pkgs; [ gcc clang ]; };
-      };
-
-    };
+        devShells = {
+          default =
+            pkgs.mkShell { buildInputs = with pkgs; [ sqlite rlwrap ]; };
+        };
+      });
 }
