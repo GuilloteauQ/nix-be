@@ -19,7 +19,7 @@ def extract_version(path, package):
 def generate_rcfile(paths):
     add_to_path_env = ":".join(f"{path}/bin" for path in paths)
     return f"""
-declare -x PS1="[\\u@\\h:(nix-best-effort) \\W]\\$ "
+declare -x PS1="[\\u@\\h:(nix-best-effort) \\w]\\$ "
 declare -x PATH="$PATH:{add_to_path_env}"
 """
 
